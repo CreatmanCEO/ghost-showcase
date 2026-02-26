@@ -1,0 +1,122 @@
+{
+  "llm": {
+    "provider": "claude",
+    "claude": {
+      "api_key": "sk-ant-api03-...",
+      "model": "claude-3-5-sonnet-20241022",
+      "temperature": 0.7,
+      "max_tokens": 2000,
+      "timeout": 30
+    },
+    "openai": {
+      "api_key": "sk-...",
+      "model": "gpt-4o",
+      "temperature": 0.7,
+      "max_tokens": 2000,
+      "timeout": 30
+    },
+    "ollama": {
+      "url": "http://localhost:11434",
+      "model": "llama2",
+      "temperature": 0.7,
+      "timeout": 60
+    },
+    "lmstudio": {
+      "url": "http://localhost:1234",
+      "model": "custom-model",
+      "temperature": 0.7,
+      "timeout": 60
+    }
+  },
+  "stt": {
+    "provider": "deepgram",
+    "deepgram": {
+      "api_key": "your-deepgram-api-key",
+      "model": "nova-2",
+      "language": "en-US",
+      "punctuate": true,
+      "interim_results": true
+    },
+    "whisper": {
+      "model_size": "base",
+      "device": "cuda",
+      "compute_type": "float16",
+      "language": "en",
+      "beam_size": 5
+    },
+    "mode": "push-to-talk",
+    "vad_enabled": false,
+    "vad_threshold": 0.5
+  },
+  "rag": {
+    "enabled": true,
+    "chunk_size": 500,
+    "chunk_overlap": 50,
+    "top_k": 3,
+    "similarity_threshold": 0.7,
+    "embedding_provider": "openai",
+    "embedding_model": "text-embedding-3-small"
+  },
+  "ui": {
+    "theme": "dark",
+    "opacity": 0.95,
+    "position": {
+      "x": 100,
+      "y": 100
+    },
+    "size": {
+      "width": 400,
+      "height": 600
+    },
+    "always_on_top": true,
+    "start_minimized": false,
+    "remember_position": true
+  },
+  "hotkeys": {
+    "toggle_overlay": "Ctrl+Shift+G",
+    "push_to_talk": "Ctrl+Space",
+    "cycle_mode": "Ctrl+Shift+M",
+    "clear_conversation": "Ctrl+Shift+C",
+    "hide_overlay": "Escape"
+  },
+  "modes": {
+    "default": "general",
+    "interview": {
+      "system_prompt": "You are a technical interview assistant. Provide concise hints and guidance without giving away complete answers. Focus on algorithmic thinking, data structures, and complexity analysis. Keep responses under 3 sentences unless asked for more detail.",
+      "temperature": 0.5,
+      "max_tokens": 500
+    },
+    "meeting": {
+      "system_prompt": "You are a professional meeting assistant. Provide quick facts, talking points, and context in bullet-point format. Keep responses concise and professional. Focus on clarity and actionable information.",
+      "temperature": 0.6,
+      "max_tokens": 300
+    },
+    "coding": {
+      "system_prompt": "You are a coding assistant. Provide code-first responses with best practices and documentation links. Suggest alternative approaches when relevant. Use the user's programming language and framework context.",
+      "temperature": 0.3,
+      "max_tokens": 1000
+    },
+    "learning": {
+      "system_prompt": "You are a learning assistant. Explain concepts clearly with analogies and examples. Encourage exploration and deeper understanding. Ask follow-up questions to guide learning. Use a teaching tone.",
+      "temperature": 0.7,
+      "max_tokens": 800
+    },
+    "general": {
+      "system_prompt": "You are a helpful AI assistant. Provide clear, accurate, and contextually appropriate responses. Adapt your tone and detail level based on the user's needs.",
+      "temperature": 0.7,
+      "max_tokens": 2000
+    }
+  },
+  "privacy": {
+    "save_conversations": false,
+    "conversation_history_limit": 20,
+    "telemetry_enabled": false,
+    "crash_reports": false
+  },
+  "performance": {
+    "gpu_acceleration": true,
+    "max_concurrent_requests": 3,
+    "response_timeout": 30,
+    "auto_cleanup_memory": true
+  }
+}
