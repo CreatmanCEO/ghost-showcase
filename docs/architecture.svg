@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 580" width="980" height="580" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial">
+  <title>GHOST — system architecture</title>
+  <desc>Two-process architecture. The Electron renderer (React 19, Vite, Tailwind, Zustand) renders an invisible always-on-top overlay. The Electron main process applies the WDA_EXCLUDEFROMCAPTURE Win32 attribute via koffi so the window is invisible to screen-recording APIs, manages global hotkeys, captures audio via WASAPI loopback (pyaudiowpatch on the Python side), and bridges the renderer to the Python sidecar via WebSocket JSON-RPC on port 9876. The Python sidecar (asyncio + websockets) hosts an EventBus, CaptureManager, Silero VAD, a streaming STT layer (Deepgram cloud or faster-whisper local), a multi-provider LLM router (litellm — Claude, GPT, Ollama, LM Studio), and a ChromaDB-backed RAG system for personal documents.</desc>
+
+  <rect x="0" y="0" width="980" height="580" fill="#0d1117"/>
+
+  <text x="490" y="30" text-anchor="middle" font-size="18" fill="#e6edf3" font-weight="600">GHOST — two-process architecture</text>
+  <text x="490" y="50" text-anchor="middle" font-size="12" fill="#7d8590">invisible Electron overlay (renderer + main) ↔ WebSocket JSON-RPC ↔ Python asyncio sidecar (STT · LLM · RAG)</text>
+
+  <!-- Electron block -->
+  <rect x="40" y="76" width="420" height="208" rx="10" fill="#1f2937" stroke="#3b9eff"/>
+  <text x="250" y="100" text-anchor="middle" font-size="14" fill="#3b9eff" font-weight="700">Electron 33+ (TypeScript)</text>
+
+  <rect x="58" y="116" width="384" height="74" rx="6" fill="#161b22" stroke="#27c93f"/>
+  <text x="250" y="134" text-anchor="middle" font-size="12" fill="#27c93f" font-weight="700">Renderer process (React 19 + Vite + Tailwind + Zustand)</text>
+  <text x="72" y="154" font-size="11" fill="#d1d5db">• Invisible overlay UI · transparent · always-on-top · drag/resize</text>
+  <text x="72" y="170" font-size="11" fill="#d1d5db">• 5 modes: Interview · Meeting · Coding · Learning · General</text>
+  <text x="72" y="186" font-size="11" fill="#d1d5db">• Streaming token rendering · session view · RAG document drawer</text>
+
+  <rect x="58" y="200" width="384" height="74" rx="6" fill="#161b22" stroke="#cc785c"/>
+  <text x="250" y="218" text-anchor="middle" font-size="12" fill="#cc785c" font-weight="700">Main process (IPC bridge, Win32 native via koffi)</text>
+  <text x="72" y="238" font-size="11" fill="#d1d5db">• <tspan fill="#dcdcaa">SetWindowDisplayAffinity → WDA_EXCLUDEFROMCAPTURE</tspan></text>
+  <text x="72" y="254" font-size="11" fill="#d1d5db">• Global hotkeys: Ctrl+Shift+G/V/A/M/Esc (panic-hide)</text>
+  <text x="72" y="270" font-size="11" fill="#d1d5db">• System tray · WebSocket client to sidecar · process supervisor</text>
+
+  <!-- WebSocket connector -->
+  <line x1="460" y1="180" x2="520" y2="180" stroke="#9d6cff" stroke-width="2" stroke-dasharray="4 3"/>
+  <polygon points="528,180 516,174 516,186" fill="#9d6cff"/>
+  <text x="490" y="172" text-anchor="middle" font-size="10" fill="#9d6cff">WebSocket</text>
+  <text x="490" y="196" text-anchor="middle" font-size="10" fill="#9d6cff">JSON-RPC :9876</text>
+
+  <!-- Python sidecar block -->
+  <rect x="528" y="76" width="412" height="208" rx="10" fill="#1f2937" stroke="#dcdcaa"/>
+  <text x="734" y="100" text-anchor="middle" font-size="14" fill="#dcdcaa" font-weight="700">Python 3.11+ sidecar (asyncio · websockets)</text>
+
+  <rect x="546" y="116" width="378" height="74" rx="6" fill="#161b22" stroke="#22c55e"/>
+  <text x="735" y="134" text-anchor="middle" font-size="12" fill="#22c55e" font-weight="700">Capture &amp; voice activity</text>
+  <text x="560" y="154" font-size="11" fill="#d1d5db">• <tspan fill="#dcdcaa">pyaudiowpatch</tspan> — WASAPI loopback (system audio)</text>
+  <text x="560" y="170" font-size="11" fill="#d1d5db">• Microphone + system source merged in CaptureManager</text>
+  <text x="560" y="186" font-size="11" fill="#d1d5db">• <tspan fill="#dcdcaa">silero-vad</tspan> — speech onset detection (~200 ms buffer)</text>
+
+  <rect x="546" y="200" width="378" height="74" rx="6" fill="#161b22" stroke="#9d6cff"/>
+  <text x="735" y="218" text-anchor="middle" font-size="12" fill="#9d6cff" font-weight="700">Inference layers</text>
+  <text x="560" y="238" font-size="11" fill="#d1d5db">• STT: <tspan fill="#dcdcaa">deepgram-sdk</tspan> (cloud) → <tspan fill="#dcdcaa">faster-whisper</tspan> (local)</text>
+  <text x="560" y="254" font-size="11" fill="#d1d5db">• LLM: <tspan fill="#dcdcaa">litellm</tspan> Router → Claude · GPT · Ollama · LM Studio</text>
+  <text x="560" y="270" font-size="11" fill="#d1d5db">• RAG: <tspan fill="#dcdcaa">chromadb</tspan> + sentence embeddings · per-session docs</text>
+
+  <!-- Storage -->
+  <rect x="40" y="304" width="900" height="58" rx="10" fill="#161b22" stroke="#7d8590"/>
+  <text x="490" y="326" text-anchor="middle" font-size="13" fill="#e6edf3" font-weight="700">Local storage (no cloud sync by default)</text>
+  <text x="490" y="346" text-anchor="middle" font-size="11" fill="#9ca3af">SQLite — sessions · transcripts · settings  ·  ChromaDB — RAG vectors  ·  encrypted .env — API keys  ·  no telemetry by default</text>
+
+  <!-- External providers row -->
+  <line x1="490" y1="362" x2="490" y2="386" stroke="#4b5563" stroke-width="2" stroke-dasharray="3 3"/>
+
+  <rect x="40" y="394" width="220" height="60" rx="8" fill="#1f2937" stroke="#27c93f"/>
+  <text x="150" y="416" text-anchor="middle" font-size="12" fill="#27c93f" font-weight="700">STT providers</text>
+  <text x="150" y="434" text-anchor="middle" font-size="10" fill="#9ca3af">Deepgram · faster-whisper</text>
+  <text x="150" y="448" text-anchor="middle" font-size="10" fill="#9ca3af">(cloud / local · interchangeable)</text>
+
+  <rect x="272" y="394" width="220" height="60" rx="8" fill="#1f2937" stroke="#dcdcaa"/>
+  <text x="382" y="416" text-anchor="middle" font-size="12" fill="#dcdcaa" font-weight="700">LLM providers</text>
+  <text x="382" y="434" text-anchor="middle" font-size="10" fill="#9ca3af">Claude · GPT · Ollama · LM Studio</text>
+  <text x="382" y="448" text-anchor="middle" font-size="10" fill="#9ca3af">(cloud or 100% local)</text>
+
+  <rect x="504" y="394" width="220" height="60" rx="8" fill="#1f2937" stroke="#9d6cff"/>
+  <text x="614" y="416" text-anchor="middle" font-size="12" fill="#9d6cff" font-weight="700">Vector DB</text>
+  <text x="614" y="434" text-anchor="middle" font-size="10" fill="#9ca3af">ChromaDB — local, embedded</text>
+  <text x="614" y="448" text-anchor="middle" font-size="10" fill="#9ca3af">(your CV, JD, notes — never uploaded)</text>
+
+  <rect x="736" y="394" width="204" height="60" rx="8" fill="#1f2937" stroke="#3b9eff"/>
+  <text x="838" y="416" text-anchor="middle" font-size="12" fill="#3b9eff" font-weight="700">OS integration</text>
+  <text x="838" y="434" text-anchor="middle" font-size="10" fill="#9ca3af">Windows 10/11 · Win32 API</text>
+  <text x="838" y="448" text-anchor="middle" font-size="10" fill="#9ca3af">koffi · WASAPI loopback</text>
+
+  <!-- Latency target -->
+  <rect x="240" y="478" width="500" height="60" rx="10" fill="#2a1414" stroke="#ff5f56"/>
+  <text x="490" y="500" text-anchor="middle" font-size="13" fill="#ff5f56" font-weight="700">Latency target — first reply tokens within 1–2 s of speech end</text>
+  <text x="490" y="518" text-anchor="middle" font-size="11" fill="#f4d4d4">VAD detects speech start → Deepgram streams partial transcripts →</text>
+  <text x="490" y="532" text-anchor="middle" font-size="11" fill="#f4d4d4">LLM begins generation on partials → tokens stream into the overlay</text>
+
+  <text x="490" y="566" text-anchor="middle" font-size="10" fill="#7d8590">Phase 1 (in development) · Windows-only · target — not yet a measured benchmark</text>
+</svg>
