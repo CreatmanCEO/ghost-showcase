@@ -641,4 +641,4 @@ Summarize the key points from this meeting:
 
 ---
 
-<sub>See also: [ARCHITECTURE.md](ARCHITECTURE.md) | [TECH_STACK.md](TECH_STACK.md) | [USE_CASES.md](USE_CASES.md)</sub>
+<sub>See also: [ARCHITECTURE.md](ARCHITECTURE.md)</sub>

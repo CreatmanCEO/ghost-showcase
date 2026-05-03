@@ -593,4 +593,4 @@ npm run start  # Launches both processes
 
 ---
 
-<sub>See also: [FEATURES.md](FEATURES.md) | [TECH_STACK.md](TECH_STACK.md) | [USE_CASES.md](USE_CASES.md)</sub>
+<sub>See also: [FEATURES.md](FEATURES.md) · [architecture.svg](architecture.svg)</sub>
